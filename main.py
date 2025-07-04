@@ -1,11 +1,10 @@
 import asyncio
 from time import sleep
-from threading import Thread
 import prometheus_client as prom
 from modules.env import env
 from modules import melcloud
 
-melcloud = melcloud.MELCloud(env.USERNAME, env.PASSWORD)
+melcloud = melcloud.MELCloud(env.MEL_USERNAME, env.MEL_PASSWORD)
 METRICS = {
     "RoomTemperature": prom.Gauge(
         name="room_temperature", documentation="Room Temperature",
@@ -69,18 +68,13 @@ async def update_metrics():
             METRICS[prop].labels(device_name=device_name).set(value)
 
 
-def metrics_loop():
-    while True:
-        asyncio.run(update_metrics())
-        sleep(60)
-
-
 if __name__ == "__main__":
     prom.disable_created_metrics()
     prom.REGISTRY.unregister(prom.GC_COLLECTOR)
     prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
     prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 
-    Thread(target=metrics_loop, daemon=True).start()
     _, web_thread = prom.start_http_server(addr="0.0.0.0", port=env.PROMETHEUS_PORT)
-    web_thread.join()
+    while True:
+        asyncio.run(update_metrics())
+        sleep(60)

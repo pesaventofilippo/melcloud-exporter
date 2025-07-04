@@ -15,7 +15,7 @@ class MELCloud:
         self.password = password
 
     async def get_device_data(self) -> dict[str, dict]:
-        with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session:
             token = await pymelcloud.login(self.username, self.password, session)
             devices = await pymelcloud.get_devices(token, session)
 

@@ -11,8 +11,8 @@ The exporter is configured using environment variables.
 |---------------------|-----------------------------------|--------------|
 | `PROMETHEUS_PORT`   | Port the exporter listens on      | `8000`       |
 | `PROMETHEUS_PREFIX` | Prefix for the Prometheus metrics | `"melcloud"` |
-| `USERNAME`          | MELCloud Login username           | -            |
-| `PASSWORD`          | MELCloud Login password           | -            |
+| `MEL_USERNAME`      | MELCloud Login username           | -            |
+| `MEL_PASSWORD`      | MELCloud Login password           | -            |
 
 ## Docker
 The exporter is available as a Docker image on the [GitHub Container Registry](https://ghcr.io/pesaventofilippo/melcloud-exporter).
@@ -20,8 +20,8 @@ The exporter is available as a Docker image on the [GitHub Container Registry](h
 To run the exporter using Docker, you can use the following command:
 ```bash
 docker run -d -p 8000:8000 \
-    -e USERNAME=user@example.com \
-    -e PASSWORD=yourpassword \
+    -e MEL_USERNAME=user@example.com \
+    -e MEL_PASSWORD=yourpassword \
     ghcr.io/pesaventofilippo/melcloud-exporter
 ```
 
@@ -35,6 +35,6 @@ services:
     ports:
       - 8000:8000
     environment:
-      - USERNAME=user@example.com
-      - PASSWORD=yourpassword
+      - MEL_USERNAME=user@example.com
+      - MEL_PASSWORD=yourpassword
 ```
