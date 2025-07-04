@@ -81,8 +81,6 @@ if __name__ == "__main__":
     prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
     prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 
-    asyncio.run(melcloud.login())
     Thread(target=metrics_loop, daemon=True).start()
-
     _, web_thread = prom.start_http_server(addr="0.0.0.0", port=env.PROMETHEUS_PORT)
     web_thread.join()

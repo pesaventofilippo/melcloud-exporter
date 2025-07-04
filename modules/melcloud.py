@@ -13,20 +13,14 @@ class MELCloud:
     def __init__(self, username: str, password: str):
         self.username = username
         self.password = password
-        self._session = aiohttp.ClientSession()
-        self._devices = None
-
-    async def login(self):
-        token = await pymelcloud.login(self.username, self.password, self._session)
-        devices = await pymelcloud.get_devices(token, self._session)
-        self._devices = devices[pymelcloud.DEVICE_TYPE_ATA]
 
     async def get_device_data(self) -> dict[str, dict]:
-        if not self._devices:
-            await self.login()
+        with aiohttp.ClientSession() as session:
+            token = await pymelcloud.login(self.username, self.password, session)
+            devices = await pymelcloud.get_devices(token, session)
 
         res = {}
-        for dev in self._devices:
+        for dev in devices[pymelcloud.DEVICE_TYPE_ATA]:
             raw = dev._device_conf
             name = raw.get("DeviceName")
             data = raw.get("Device")
