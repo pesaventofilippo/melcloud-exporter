@@ -65,7 +65,8 @@ async def update_metrics():
     data = await melcloud.get_device_data()
     for device_name, props in data.items():
         for prop, value in props.items():
-            METRICS[prop].labels(device_name=device_name).set(value)
+            if value is not None:
+                METRICS[prop].labels(device_name=device_name).set(value)
 
 
 if __name__ == "__main__":
